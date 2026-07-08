@@ -1,8 +1,7 @@
 FROM ghost:6-alpine
 
 # Metadata
-LABEL maintainer="WarZ Tech News <tech@warztech.news>"
-LABEL description="Ghost CMS for WarZ Tech News"
+LABEL description="Ghost CMS deployment (Render + Aiven + Brevo)"
 
 # Set working directory
 WORKDIR /var/lib/ghost
