@@ -1,22 +1,35 @@
 # WarZ Tech News - Ghost CMS Deployment
 
-## 🚀 Deploy em 10 Minutos no Railway
+## 🚀 Deploy 100% GRÁTIS PARA SEMPRE
 
-Este diretório contém tudo que você precisa para fazer deploy do Ghost CMS gratuitamente no Railway.
+Este diretório contém tudo que você precisa para fazer deploy do Ghost CMS **gratuitamente** em múltiplas plataformas.
+
+### 🎯 Opções Disponíveis
+
+| Plataforma | Free Forever? | Setup | Recomendado Para |
+|------------|---------------|-------|------------------|
+| **Render.com** | ✅ Sim | 10 min | 🏆 Começar rápido |
+| **Oracle Cloud** | ✅ Sim | 2-3h | Máxima performance |
+
+**📖 Guia completo:** Veja `/docs/free-forever-deployment.md`
 
 ---
 
-## 📋 Pré-requisitos
+## 🎯 OPÇÃO 1: Deploy Rápido - Render.com (RECOMENDADO)
 
-- Conta no GitHub (grátis)
-- Conta no Railway.app (grátis - 500h/mês)
-- Git instalado
+### Por Que Render?
 
----
+✅ **100% grátis para sempre** (free tier permanente)  
+✅ Deploy em **10 minutos**  
+✅ SSL automático  
+✅ MySQL incluído  
+✅ Zero configuração complexa
 
-## 🎯 Deploy Rápido (Passo a Passo)
+⚠️ **Nota:** Free tier "dorme" após 15min de inatividade (solução: UptimeRobot grátis)
 
-### PASSO 1: Preparar Repositório GitHub
+### Passo a Passo
+
+#### PASSO 1: Preparar Repositório GitHub
 
 ```bash
 # 1. Crie um novo repositório no GitHub chamado "warztech-ghost"
@@ -34,7 +47,61 @@ git branch -M main
 git push -u origin main
 ```
 
-### PASSO 2: Deploy no Railway
+#### PASSO 2: Deploy no Render
+
+##### 2.1. Criar Conta no Render
+```
+1. Acesse: https://render.com
+2. Click "Get Started for Free"
+3. Login com GitHub (autorize acesso aos repositórios)
+```
+
+##### 2.2. Deploy usando Blueprint
+```
+1. No Render Dashboard, click "New +" → "Blueprint"
+2. Click "Connect a repository"
+3. Selecione o repositório "warztech-ghost"
+4. Render detecta automaticamente o render.yaml
+5. Revise a configuração:
+   ✅ Web Service: warztech-ghost (Docker, Free plan)
+   ✅ Database: warztech-db (MySQL, Free plan)
+6. Click "Apply"
+7. Aguarde deploy (5-10 minutos)
+```
+
+##### 2.3. Configurar URL Final
+
+```
+Após deploy completo:
+
+1. Acesse: warztech-ghost service → Environment
+2. Localize variável "url"
+3. Edite para: https://warztech-ghost.onrender.com
+   (ou seu custom domain se configurar depois)
+4. Salvar → Aguarde redeploy automático (1-2 min)
+```
+
+##### 2.4. Acesse Ghost Admin
+
+```
+URL: https://warztech-ghost.onrender.com/ghost
+
+Primeira vez:
+1. Criar conta admin
+2. Configurar site básico
+3. Começar a publicar!
+```
+
+**✅ PRONTO! Site no ar, 100% grátis para sempre!**
+
+---
+
+## 🎯 OPÇÃO 2: Deploy Railway (Alternativa)
+
+⚠️ **Atenção:** Railway tem limite de 500h/mês no free tier.  
+**Recomendamos Render para "free forever".**
+
+### Se preferir Railway:
 
 #### 2.1. Criar Conta no Railway
 ```
@@ -385,22 +452,85 @@ Após deploy bem-sucedido:
 
 ---
 
-## 🎓 Recursos
+## 📚 Recursos
+
+### Guias Completos
+
+- 📘 **Deploy 100% Grátis:** `/docs/free-forever-deployment.md`
+- 📘 **Migração Railway → Render:** `/docs/migration-railway-to-render.md`
+- 📘 **Quick Start Geral:** `/QUICK-START.md`
 
 ### Documentação Oficial
 - Ghost: https://ghost.org/docs/
+- Render: https://render.com/docs/
 - Railway: https://docs.railway.app/
+- Oracle Cloud: https://docs.oracle.com/en-us/iaas/
 - Mailgun: https://documentation.mailgun.com/
 
 ### Comunidade
 - Ghost Forum: https://forum.ghost.org/
+- Render Community: https://community.render.com/
+- Render Discord: https://discord.gg/render
 - Railway Discord: https://discord.gg/railway
-- WarZ Slack: #tech-questions
+
+### Ferramentas Úteis
+
+**Monitoramento (Grátis):**
+- UptimeRobot: https://uptimerobot.com/ - Evita "sleep" no Render
+
+**CDN (Grátis):**
+- Cloudflare: https://cloudflare.com/ - CDN + DDoS protection
+
+**Email (Grátis):**
+- Mailgun: https://mailgun.com/ - 5k emails/mês
+- SendGrid: https://sendgrid.com/ - 100 emails/dia
+- Resend: https://resend.com/ - 3k emails/mês
+
+**Analytics (Grátis):**
+- Google Analytics 4: https://analytics.google.com/
+- Plausible (self-hosted): https://plausible.io/
+- Umami (self-hosted): https://umami.is/
+
+**Imagens (Grátis):**
+- ImageKit: https://imagekit.io/ - 20GB/mês
+- Cloudinary: https://cloudinary.com/ - 25 créditos/mês
+- TinyPNG: https://tinypng.com/ - Comprimir antes upload
 
 ### Suporte
 - Email: tech@warztech.news
-- Docs: /docs/
-- Issues: GitHub Issues
+- Docs: `/docs/`
+- Issues: GitHub Issues do projeto
+
+---
+
+## 💰 Comparação de Custos
+
+### Render.com (Recomendado)
+```
+Ano 1: $0
+Ano 2: $0
+Ano 3: $0
+...
+Para sempre: $0 🎉
+```
+
+### Railway
+```
+Mês 1-2: $0 (até 500h)
+Mês 3+: ~$5-10/mês
+Ano 1: ~$50-100
+```
+
+### Oracle Cloud Always Free
+```
+Ano 1: $0
+Ano 2: $0
+...
+Para sempre: $0 🎉
+(Mas setup complexo: 2-3 horas)
+```
+
+**Conclusão:** Render = Melhor custo-benefício (grátis + fácil)
 
 ---
 

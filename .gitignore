@@ -17,6 +17,10 @@ yarn-error.log*
 # Dependencies
 node_modules/
 
+# CLI tools (downloaded binaries, not part of source)
+tools/
+.venv/
+
 # OS files
 .DS_Store
 Thumbs.db
