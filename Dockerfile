@@ -6,6 +6,12 @@ LABEL description="Ghost CMS deployment (Render + Aiven + Brevo)"
 # Set working directory
 WORKDIR /var/lib/ghost
 
+# Bake custom themes into the image so they survive redeploys.
+# Render's free tier has an ephemeral filesystem - themes uploaded
+# via Ghost Admin only live on disk and are lost on every redeploy.
+# Baking them into the image (and the Dockerfile) keeps them persistent.
+COPY themes/headline /var/lib/ghost/content/themes/headline
+
 # Expose Ghost port
 EXPOSE 2368
 
