@@ -1,8 +1,21 @@
-name: Keep Render instance awake
+name: Keep Render + Aiven awake
 
-# Pings the production site every 10 minutes so the Render free-tier web
-# service doesn't spin down after 15 min of inactivity (cold start otherwise
-# adds 50s+ to the next real visitor's request - bad for signup conversion).
+# Pings production every 10 minutes to prevent two separate free-tier
+# sleep/power-off behaviors from breaking the site:
+#
+#   1. Render (web service): spins down after 15 min with zero inbound
+#      HTTP traffic. Cold start then costs ~1 min on the next real visitor -
+#      bad for signup/subscribe conversion.
+#   2. Aiven (MySQL): the free tier powers off after a period of "no
+#      continuative activity" (Aiven doesn't publish an exact threshold for
+#      MySQL, unlike some of their other services). This is what caused the
+#      original crash-loop incident on this project - Ghost couldn't reach
+#      the DB on boot after Aiven powered it off from inactivity.
+#
+# Both jobs below hit real content routes (not static assets), so each run
+# forces Ghost to execute live queries against Aiven MySQL - confirmed by
+# production logs showing DB-backed helpers (e.g. postsPublic.browse) firing
+# on these exact requests. This isn't a blind ping; it's real DB activity.
 #
 # NOTE: this is a best-effort backup, not a guarantee:
 #   - GitHub's own docs say scheduled workflows can be delayed, especially
@@ -10,8 +23,8 @@ name: Keep Render instance awake
 #   - GitHub disables scheduled workflows automatically after 60 days with
 #     no repository commits (a "workflow_dispatch" run or any commit resets
 #     the clock).
-# For a more reliable keep-alive, pair this with a free UptimeRobot HTTP
-# monitor (5 min interval) pointed at the same URL.
+# For a more reliable keep-alive with real downtime alerting, pair this with
+# a free UptimeRobot HTTP monitor (5 min interval) pointed at the same URL.
 
 on:
   schedule:
@@ -22,8 +35,14 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping production site
+      - name: Ping homepage (Render traffic + server-rendered DB query)
         run: |
-          curl -sS -o /dev/null -w "HTTP %{http_code} - %{time_total}s\n" \
+          curl -sS -o /dev/null -w "Homepage: HTTP %{http_code} - %{time_total}s\n" \
             --max-time 30 \
-            https://warz-tech-news.onrender.com/
+            https://warz.tech/
+
+      - name: Ping Content API (guaranteed live MySQL query on Aiven)
+        run: |
+          curl -sS -o /dev/null -w "Content API: HTTP %{http_code} - %{time_total}s\n" \
+            --max-time 30 \
+            "https://warz.tech/ghost/api/content/settings/?key=d67de59051d3359e049e482295"
