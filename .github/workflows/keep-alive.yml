@@ -35,14 +35,20 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
+      # --max-time is intentionally generous (90s): Render's own docs say a
+      # cold start after sleep takes "about one minute". A shorter timeout
+      # here causes false-positive workflow failures on exactly the
+      # scenario this workflow exists to prevent (the site having slept).
+      # --retry handles the rare case of a mid-wake-up connection hiccup.
       - name: Ping homepage (Render traffic + server-rendered DB query)
         run: |
           curl -sS -o /dev/null -w "Homepage: HTTP %{http_code} - %{time_total}s\n" \
-            --max-time 30 \
+            --max-time 90 --retry 2 --retry-delay 5 \
             https://warz.tech/
 
       - name: Ping Content API (guaranteed live MySQL query on Aiven)
+        if: always()
         run: |
           curl -sS -o /dev/null -w "Content API: HTTP %{http_code} - %{time_total}s\n" \
-            --max-time 30 \
+            --max-time 90 --retry 2 --retry-delay 5 \
             "https://warz.tech/ghost/api/content/settings/?key=d67de59051d3359e049e482295"
