@@ -1,0 +1,29 @@
+name: Keep Render instance awake
+
+# Pings the production site every 10 minutes so the Render free-tier web
+# service doesn't spin down after 15 min of inactivity (cold start otherwise
+# adds 50s+ to the next real visitor's request - bad for signup conversion).
+#
+# NOTE: this is a best-effort backup, not a guarantee:
+#   - GitHub's own docs say scheduled workflows can be delayed, especially
+#     at the top of the hour, and can be silently dropped under high load.
+#   - GitHub disables scheduled workflows automatically after 60 days with
+#     no repository commits (a "workflow_dispatch" run or any commit resets
+#     the clock).
+# For a more reliable keep-alive, pair this with a free UptimeRobot HTTP
+# monitor (5 min interval) pointed at the same URL.
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping production site
+        run: |
+          curl -sS -o /dev/null -w "HTTP %{http_code} - %{time_total}s\n" \
+            --max-time 30 \
+            https://warz-tech-news.onrender.com/
