@@ -1,0 +1,22 @@
+services:
+  ghost:
+    build: .
+    container_name: warz-ghost
+    restart: always
+    # Maps host port 80 to Ghost's internal 2368 so the site is reachable
+    # directly over HTTP. When a domain + HTTPS is added later, put a reverse
+    # proxy (Caddy/nginx) in front and change this to 127.0.0.1:2368:2368.
+    ports:
+      - "80:2368"
+    env_file:
+      - .env
+    volumes:
+      # Persistent content (uploads, images, themes, settings files).
+      # The image bakes the theme + logo into /var/lib/ghost/content; that
+      # content seeds this named volume on first creation and then persists
+      # across container restarts/rebuilds - so uploads survive from now on.
+      - ghost-content:/var/lib/ghost/content
+
+volumes:
+  ghost-content:
+    driver: local

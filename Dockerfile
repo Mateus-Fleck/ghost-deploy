@@ -12,6 +12,11 @@ WORKDIR /var/lib/ghost
 # Baking them into the image (and the Dockerfile) keeps them persistent.
 COPY themes/headline /var/lib/ghost/content/themes/headline
 
+# Bake seed content (logo, icon, etc.) into the image for the same reason.
+# Images uploaded via Ghost Admin are lost on redeploy; committing them
+# to this repo and copying them here keeps them persistent across deploys.
+COPY content-seed/images /var/lib/ghost/content/images
+
 # Expose Ghost port
 EXPOSE 2368
 
