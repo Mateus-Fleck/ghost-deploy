@@ -1,0 +1,33 @@
+routes:
+  # Channels: filtered "views" of existing content. They do NOT change any
+  # post's URL - every post keeps its current /{slug}/ address exactly as
+  # published (e.g. /addi/, /weekly-27-latam-vc-report-top-3-capital-raises/).
+  # These two power the nav menu links "Startups" and "Weekly VC Report".
+  # `data: tag.<slug>` binds the real Tag object into the {{#tag}} context,
+  # so tag.hbs renders the tag's actual name (e.g. "Startups") as the page
+  # heading instead of a generic pagination title like "Page 1".
+  # Note: /tag/startups/ and /tag/weekly-report/ still exist separately
+  # (channels don't own a post's URL the way collections do) - both show
+  # the same list of posts under a different address. Not a broken link,
+  # just duplicate-content-adjacent; acceptable for a site this size.
+  /startups/:
+    controller: channel
+    filter: tag:startups
+    data: tag.startups
+    template: tag
+
+  /weekly-vc-report/:
+    controller: channel
+    filter: tag:weekly-report
+    data: tag.weekly-report
+    template: tag
+
+collections:
+  # Default collection - every post's URL stays exactly as-is.
+  /:
+    permalink: /{slug}/
+    template: index
+
+taxonomies:
+  tag: /tag/{slug}/
+  author: /author/{slug}/

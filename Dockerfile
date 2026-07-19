@@ -12,10 +12,17 @@ WORKDIR /var/lib/ghost
 # Baking them into the image (and the Dockerfile) keeps them persistent.
 COPY themes/headline /var/lib/ghost/content/themes/headline
 
-# Bake seed content (logo, icon, etc.) into the image for the same reason.
-# Images uploaded via Ghost Admin are lost on redeploy; committing them
-# to this repo and copying them here keeps them persistent across deploys.
+# Bake seed content (logo, icon, post covers, etc.) into the image for the
+# same reason. Images uploaded via Ghost Admin are lost on redeploy;
+# committing them to this repo and copying them here keeps them
+# persistent across deploys.
 COPY content-seed/images /var/lib/ghost/content/images
+
+# Same problem, same fix, for site-wide settings files (routes.yaml).
+# Settings → Labs uploads also only live on the ephemeral disk and are
+# lost on redeploy/restart - baking the file in keeps custom routes
+# (e.g. /startups/, /weekly-vc-report/) working across restarts.
+COPY content-seed/settings /var/lib/ghost/content/settings
 
 # Expose Ghost port
 EXPOSE 2368
